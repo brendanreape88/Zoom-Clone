@@ -1,3 +1,5 @@
+const { text } = require("body-parser");
+
 const socket = io("/");
 const videoGrid = document.getElementById("video-grid");
 const myVideo = document.createElement("video");
@@ -29,6 +31,19 @@ navigator.mediaDevices
 
     socket.on("user-connected", (userId) => {
       connectToNewUser(userId, stream);
+    });
+
+    let msg = $("input");
+
+    $("html").keydown((e) => {
+      if (e.which == 13 && text.val().length !== 0) {
+        socket.emit("message", text.val());
+        text.val("");
+      }
+    });
+
+    socket.on("createMessage", (message) => {
+      $(".messages").append(`<li class="message"><b>user</b>${message}</li>`);
     });
   });
 
